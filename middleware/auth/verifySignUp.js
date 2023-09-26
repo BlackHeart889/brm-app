@@ -1,34 +1,44 @@
+const {Validator} = require('node-input-validator');
 const db = require('../../models');
 const Role = db.role;
 const User = db.user;
 
 exports.checkDuplicateUsernameorEmail = async (req, res, next) => {
     try {
-        //Validacion Username
-        let user = await User.findOne({
-            where: {
-                username: req.body.username,
-            },
+        const v = new Validator(req.body, {
+            username: 'required|string',
+            email: 'required|email',
         });
-        if(user) {
-            return res.status(400).send({
-                message: "El nombre de usuario ya está en uso",
-            });
-        }
-
-        user = await User.findOne({
-            where: {
-                email: req.body.email,
-            },
+        
+        v.check().then(async (matched) => {
+            if (!matched) {
+                return res.status(400).send(v.errors);
+            } else{
+                let user = await User.findOne({
+                    where: {
+                        username: req.body.username,
+                    },
+                });
+                if(user) {
+                    return res.status(400).send({
+                        message: "El nombre de usuario ya está en uso",
+                    });
+                }
+                user = await User.findOne({
+                    where: {
+                        email: req.body.email,
+                    },
+                });
+                if(user) {
+                    return res.status(400).send({
+                        message: "El correo electrónico ya está en uso",
+                    });
+                }
+                next();
+            }
         });
-        if(user) {
-            return res.status(400).send({
-                message: "El correo electrónico ya está en uso",
-            });
-        }
-
-        next();
     } catch (error) {
+        console.log(errors)
         return res.status(500).send({
             message: "Error al validar el usuario",
         });
