@@ -6,7 +6,7 @@ const User = db.user;
 exports.checkDuplicateUsernameorEmail = async (req, res, next) => {
     try {
         const v = new Validator(req.body, {
-            username: 'required|string',
+            username: 'required|string|maxLength:15',
             email: 'required|email',
         });
         

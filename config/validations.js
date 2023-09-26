@@ -8,6 +8,7 @@ niv.extendMessages({
   email: 'El campo :attribute no es un correo electrónico válido.',
   string: "El campo :attribute debe ser de tipo texto.",
   minLength: "El campo :attribute debe contener mínimo :arg0 caracteres.",
+  maxLength: "El campo :attribute debe contener máximo :arg0 caracteres.",
   same: "Los campos :attribute y :arg0 no coinciden",
   // even: 'The value of the field must be even number.',
   // status: 'Invalid status'
