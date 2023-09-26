@@ -17,8 +17,8 @@ exports.signup = async (req, res) => {
             /**
              * username y email se validan a traves de middleware
              */
-            firstName: 'required|string',
-            lastName: 'required|string',
+            primerNombre: 'required|string',
+            primerApellido: 'required|string',
             // username: 'required|string',
             // email: 'required|email',
             password: 'required|string|minLength:8|same:password_confirmation',
@@ -29,8 +29,8 @@ exports.signup = async (req, res) => {
                 return res.status(400).send(v.errors);
             } else{
                 const user = await User.create({
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
+                    primerNombre: req.body.primerNombre,
+                    primerApellido: req.body.primerApellido,
                     username: req.body.username,
                     email: req.body.email,
                     password: bcrypt.hashSync(req.body.password),
