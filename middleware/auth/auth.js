@@ -28,14 +28,21 @@ exports.isAdministrador = async (req, res, next) => {
     try {
         const user = await User.findByPk(req.userId);
         // const role = await Role.findByPk(user.roleId);
-
-        if(user.roleId === 1){
-            return next();
+        if(user){
+            if(user.roleId === 1){
+                return next();
+            } else{
+                return res.status(403).send({
+                    message: "Debe ser administrador para realizar esta acción"
+                });
+            }
         } else{
+            req.session.token = null;
             return res.status(403).send({
-                message: "Debe ser administrador para realizar esta acción"
+                message: "Su sesión ha expirado. Por favor, inicie sesión nuevamente."
             });
         }
+        
     } catch (error) {
         return res.status(500).send({
             message: "Error al validar el rol del usuario"
@@ -48,14 +55,22 @@ exports.isCliente = async (req, res, next) => {
         const user = await User.findByPk(req.userId);
         // const role = await Role.findByPk(user.roleId);
 
-        if(user.roleId === 2){
-            return next();
+        if(user){
+            if(user.roleId === 2){
+                return next();
+            } else{
+                return res.status(403).send({
+                    message: "Debe ser cliente para realizar esta acción"
+                });
+            }
         } else{
+            req.session.token = null;
             return res.status(403).send({
-                message: "Debe ser cliente para realizar esta acción"
+                message: "Su sesión ha expirado. Por favor, inicie sesión nuevamente."
             });
         }
     } catch (error) {
+        // console.log(error);
         return res.status(500).send({
             message: "Error al validar el rol del usuario"
         });
