@@ -17,7 +17,7 @@ app.use([cookieSession({
 
 switch (process.argv[2])  {
     //Inicializar DB con datos base
-    case '--refresh-db':
+    case '--init-db':
         console.log('Refreshing database...');
         db.sequelize.sync({force: true}).then(async () => {
             console.log('Initializing database...');
