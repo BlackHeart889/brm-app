@@ -53,7 +53,7 @@ exports.showProduct = async (req, res) => {
 
 
 exports.newProduct = async (req, res) => {
-    //Crear un nuevo produccto
+    //Crear un nuevo producto
     try {
         const v = new Validator(req.body, {
             numeroLote: 'required|numeric|min:0|digitsBetween:1,15',
