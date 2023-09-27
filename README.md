@@ -5,7 +5,24 @@ Requisitos:
 - nodeJS v18.16.1
 - npm v9.5.1
 - postgreSQL 14
+
+# Herramientas Utilizadas
+- ORM Sequelize
+- express
+- node-input-validator
+- bcryptjs
+- cookie-session
+- cors
+- dotenv
+- jsonwebtoken
+- pg
+- winston
+- nodemon
+- apidoc
+
+El proyecto contiene implementaciones de validación de campos, gestión de errores, logging y autenticación de usuarios y roles.
   
+# Despliegue
 Para ejecutar el proyecto, se deben ejecutar los siguientes comandos:
 
 - git clone https://github.com/BlackHeart889/brm-app.git
@@ -21,4 +38,7 @@ Para crear la estructura de base de datos:
 Para crear el servidor web (puerto 8080)
 - npm run dev 
 
+# Notas Adicionales
 Si desea configurar el puerto del servidor web, lo puede hacer a través del archivo server.js presente en la raiz del proyecto.
+
+La documentación completa del proyecto se encuentra en la carpeta apidoc.
