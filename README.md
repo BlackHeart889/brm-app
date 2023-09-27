@@ -1,6 +1,11 @@
 # brm-app
 Proyecto creado como prueba técnica para la postulación a la vacante Desarrollador Backend
 
+Requisitos:
+- nodeJS v18.16.1
+- npm v9.5.1
+- postgreSQL 14
+  
 Para ejecutar el proyecto, se deben ejecutar los siguientes comandos:
 
 - git clone https://github.com/BlackHeart889/brm-app.git
