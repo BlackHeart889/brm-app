@@ -16,6 +16,7 @@ niv.extendMessages({
   dateFormat: "El campo :attribute debe tener la estructura :arg0",
   integer: "El campo :attribute debe ser de tipo entero",
   min: "El campo :attribute no puede ser menor a :arg0",
+  array: "El campo :attribute debe ser de tipo Array."
   // even: 'The value of the field must be even number.',
   // status: 'Invalid status'
 }, 'es');
