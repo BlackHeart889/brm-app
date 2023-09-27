@@ -10,8 +10,10 @@ Para ejecutar el proyecto, se deben ejecutar los siguientes comandos:
 
 En este punto, debe crear la base de datos que usará el proyecto y asignar las credenciales en el archivo .env presente en la raiz del proyecto; una vez asignadas las credenciales, ejecutar:
 
-- npm run migrate //crea la estructura de base de datos
-- npm run dev //crea un servidor web con el puerto 8080
+Para crear la estructura de base de datos:
+- npm run migrate 
 
+Para crear el servidor web (puerto 8080)
+- npm run dev 
 
 Si desea configurar el puerto del servidor web, lo puede hacer a través del archivo server.js presente en la raiz del proyecto.
