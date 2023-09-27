@@ -82,7 +82,7 @@ exports.signin = async (req, res) => {
                 });
                 const role = await Role.findOne({
                     where: {
-                    id: user.roleId,
+                        id: user.roleId,
                     },
                 });
                 req.session.token = token;
