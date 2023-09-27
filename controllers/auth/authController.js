@@ -1,6 +1,5 @@
-// import vine from '@vinejs/vine';
-// const vine = import ('@vinejs/vine');
 const {Validator} = require('node-input-validator');
+const logger = require('../../config/logging');
 const db = require('../../models');
 const config = require('../../config/auth.js')
 const User = db.user;
@@ -9,62 +8,55 @@ const Op = db.Sequelize.Op;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
+const service = 'auth-service';
 exports.signup = async (req, res) => {
 
     //Registrar un nuevo usuario
-    try {
-        const v = new Validator(req.body, {
-            /**
-             * username y email se validan a traves de middleware
-             */
-            primerNombre: 'required|string',
-            primerApellido: 'required|string',
-            // username: 'required|string',
-            // email: 'required|email',
-            password: 'required|string|minLength:8|same:password_confirmation',
-        });
-        
-        v.check().then(async (matched) => {
-            if (!matched) {
-                return res.status(400).send(v.errors);
-            } else{
-                const user = await User.create({
-                    primerNombre: req.body.primerNombre,
-                    primerApellido: req.body.primerApellido,
-                    username: req.body.username,
-                    email: req.body.email,
-                    password: bcrypt.hashSync(req.body.password),
-                    roleId: req.body.roleId, //verificar
-                });
+    const v = new Validator(req.body, {
+        /**
+         * username y email se validan a traves de middleware
+         */
+        primerNombre: 'required|string',
+        primerApellido: 'required|string',
+        password: 'required|string|minLength:8|same:password_confirmation',
+    });
+    v.check().then((matched) => {
+        if (!matched) {
+            return res.status(400).send(v.errors);
+        } else{
+            User.create({
+                primerNombre: req.body.primerNombre,
+                primerApellido: req.body.primerApellido,
+                username: req.body.username,
+                email: req.body.email,
+                password: bcrypt.hashSync(req.body.password),
+                roleId: req.body.roleId,
+            }).then(() => {
                 return res.status(200).send({
                     message: "Usuario registrado con éxito",
                 });
-            }
-        });
-        
-    } catch (error) {
-        return res.status(500).send({
-            message: error.message
-        });
-    }
+            }).catch(error => {
+                logger.logError('Error al registrar usuario', service, error, res)
+            });
+        }
+    });
 }
 
 exports.signin = async (req, res) => {
-    try {
-        const v = new Validator(req.body, {
-            username: 'required|string',
-            password: 'required|string',
-        });
-        
-        v.check().then(async (matched) => {
-            if (!matched) {
-                return res.status(400).send(v.errors);
-            } else{
-                const user = await User.findOne({
-                    where: {
-                        username: req.body.username,
-                    },
-                });
+    const v = new Validator(req.body, {
+        username: 'required|string',
+        password: 'required|string',
+    });
+    
+    v.check().then(async (matched) => {
+        if (!matched) {
+            return res.status(400).send(v.errors);
+        } else{
+            User.findOne({
+                where: {
+                    username: req.body.username,
+                },
+            }).then(user => {
                 if (!user) {
                     return res.status(404).send({ message: "Usuario no encontrado" });
                 }
@@ -80,24 +72,26 @@ exports.signin = async (req, res) => {
                 const token = jwt.sign({ id: user.id }, config.secret, {
                     expiresIn: 86400, // 24 horas
                 });
-                const role = await Role.findOne({
+                Role.findOne({
                     where: {
                         id: user.roleId,
                     },
+                }).then(role => {
+                    req.session.token = token;
+                    return res.status(200).send({
+                        id: user.id,
+                        username: user.username,
+                        email: user.email,
+                        roles: role.name,
+                    });
+                }).catch(error => {
+                    logger.logError('Error al consultar el rol del usuario.', service, error, res)
                 });
-                req.session.token = token;
-                return res.status(200).send({
-                    id: user.id,
-                    username: user.username,
-                    email: user.email,
-                    roles: role.name,
-                });
-            }
-        });
-        
-    } catch (error) {
-        return res.status(500).send({ message: error.message });
-    }
+            }).catch(error => {
+                logger.logError('Error al iniciar sesión.', service, error, res)
+            });
+        }
+    });
 };
 
 exports.signout = async (req, res) => {
@@ -113,6 +107,6 @@ exports.signout = async (req, res) => {
             });
         }
     } catch (err) {
-        return res.status(500).send({ message: error.message });
+        logger.logError('Error al cerrar sesión', service, error, res)
     }
 };

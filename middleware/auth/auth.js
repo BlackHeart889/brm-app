@@ -1,8 +1,11 @@
 const jwt = require("jsonwebtoken");
 const config = require('../../config/auth.js');
+const logger = require('../../config/logging');
 const db = require('../../models');
 const User = db.user;
 const Role = db.role;
+
+const service = "auth-middleware-service";
 
 exports.verifyToken =  (req, res, next) => {
     let token = req.session.token;
@@ -25,9 +28,7 @@ exports.verifyToken =  (req, res, next) => {
 };
 
 exports.isAdministrador = async (req, res, next) => {
-    try {
-        const user = await User.findByPk(req.userId);
-        // const role = await Role.findByPk(user.roleId);
+    User.findByPk(req.userId).then(user => {
         if(user){
             if(user.roleId === 1){
                 return next();
@@ -42,19 +43,13 @@ exports.isAdministrador = async (req, res, next) => {
                 message: "Su sesión ha expirado. Por favor, inicie sesión nuevamente."
             });
         }
-        
-    } catch (error) {
-        return res.status(500).send({
-            message: "Error al validar el rol del usuario"
-        });
-    }
+    }).catch(error => {
+        logger.logError('Error al validar el rol del usuario', service, error, res)
+    });
 },
 
 exports.isCliente = async (req, res, next) => {
-    try {
-        const user = await User.findByPk(req.userId);
-        // const role = await Role.findByPk(user.roleId);
-
+    User.findByPk(req.userId).then(user => {
         if(user){
             if(user.roleId === 2){
                 return next();
@@ -69,10 +64,7 @@ exports.isCliente = async (req, res, next) => {
                 message: "Su sesión ha expirado. Por favor, inicie sesión nuevamente."
             });
         }
-    } catch (error) {
-        // console.log(error);
-        return res.status(500).send({
-            message: "Error al validar el rol del usuario"
-        });
-    }
+    }).catch(error => {
+        logger.logError('Error al validar el rol del usuario', service, error, res)
+    });
 }

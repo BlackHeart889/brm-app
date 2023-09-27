@@ -41,7 +41,6 @@ require('./config/validations.js');
 require('./routes/auth.js')(app);
 require('./routes/productos.js')(app);
 require('./routes/compras.js')(app);
-require('./routes/user.js')(app);
 
 const serve = () => {
     app.listen(8080, function () {
