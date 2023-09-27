@@ -21,5 +21,9 @@
     },
     "devDependencies": {
         "nodemon": "^3.0.1"
+    },
+    "apidoc": {
+        "title": "Test BRM Documentation",
+        "url": "http://localhost:8080"
     }
 }

@@ -22,7 +22,7 @@ exports.checkDuplicateUsernameorEmail = async (req, res, next) => {
             }).then(async user => {
                 if(user) {
                     return res.status(400).send({
-                        message: "El nombre de usuario ya está en uso",
+                        error: "UsernameEnUso",
                     });
                 }
                 User.findOne({
@@ -32,15 +32,15 @@ exports.checkDuplicateUsernameorEmail = async (req, res, next) => {
                 }).then(user => {
                     if(user) {
                         return res.status(400).send({
-                            message: "El correo electrónico ya está en uso",
+                            error: "EmailEnUso",
                         });
                     }
                     next();
                 }).catch(error => {
-                    logger.logError('Error al validar el usuario', service, error, res)
+                    logger.logError('ErrorValidandoUsuario', service, error, res)
                 });
             }).catch(error => {
-                logger.logError('Error al validar el usuario', service, error, res)
+                logger.logError('ErrorValidandoUsuario', service, error, res)
             });
         }
     });

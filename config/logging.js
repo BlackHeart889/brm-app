@@ -23,6 +23,6 @@ exports.logError = (message, service, error, res) => {
         }
     });
     return res.status(500).send({
-        message: message,
+        error: message,
     });
 }

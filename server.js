@@ -38,6 +38,7 @@ switch (process.argv[2])  {
 }
 
 require('./config/validations.js');
+
 require('./routes/auth.js')(app);
 require('./routes/productos.js')(app);
 require('./routes/compras.js')(app);
